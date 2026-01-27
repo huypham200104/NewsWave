@@ -1,0 +1,22 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart" # Loại trừ code tự động tạo ra
+  errors:
+    missing_required_param: error
+    missing_return: error
+    todo: ignore
+
+linter:
+  rules:
+    - always_declare_return_types
+    - cancel_subscriptions
+    - close_sinks
+    - avoid_print # Không cho phép dùng print (phải dùng log)
+    - prefer_const_constructors # Ép dùng const để tối ưu hiệu năng
+    - prefer_const_declarations
+    - sort_child_properties_last
+    - unawaited_futures # Bắt buộc phải dùng await hoặc xử lý future
+    - use_super_parameters # Chuẩn Dart 3
