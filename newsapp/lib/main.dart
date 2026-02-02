@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/theme/app_theme.dart';
 import 'features/news/presentation/pages/home_page.dart';
+import 'injection_container.dart';
+
+// QUAN TRỌNG: Chỉ import file news_bloc.dart vì nó chứa cả Event
+import 'features/news/presentation/bloc/news_bloc.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Khởi tạo Hive
-  await Hive.initFlutter();
-  
+  await configureDependencies();
   runApp(const NewsWaveApp());
 }
 
@@ -17,13 +18,21 @@ class NewsWaveApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // Ẩn banner DEBUG
-      title: 'News Wave',
-      theme: AppTheme.light, // Theme sáng
-      darkTheme: AppTheme.dark, // Theme tối
-      themeMode: ThemeMode.system, // Tự động theo hệ thống
-      home: const HomePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NewsBloc>(
+          // getIt<NewsBloc>() giờ sẽ hoạt động nhờ @injectable vừa thêm
+          create: (_) => getIt<NewsBloc>()..add(GetTopHeadlinesEvent()), 
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'News Wave',
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        home: const HomePage(),
+      ),
     );
   }
 }
