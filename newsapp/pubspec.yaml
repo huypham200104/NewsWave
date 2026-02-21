@@ -37,6 +37,7 @@ dependencies:
   flutter_svg: ^2.0.10      # Hỗ trợ file ảnh SVG
   freezed_annotation: ^2.4.1 # Annotations cho Freezed
   json_annotation: ^4.9.0   # Required cho json_serializable
+  flutter_dotenv: ^5.2.1    # Load biến môi trường từ .env
 
 dev_dependencies:
   flutter_test:
@@ -56,3 +57,4 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env 
