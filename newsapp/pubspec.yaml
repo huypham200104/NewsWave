@@ -58,3 +58,10 @@ flutter:
     - assets/images/
     - assets/icons/
     - .env 
+  
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-VariableFont_opsz,wght.ttf
+        - asset: assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf
+          style: italic

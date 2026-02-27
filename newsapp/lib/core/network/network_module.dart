@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 @module
 abstract class NetworkModule {
@@ -20,4 +21,7 @@ abstract class NetworkModule {
 
     return dio;
   }
+
+  @lazySingleton
+  InternetConnectionChecker get connectionChecker => InternetConnectionChecker.instance;
 }

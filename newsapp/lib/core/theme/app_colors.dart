@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary colors
-  static const Color primary = Color(0xFF1E88E5);
-  static const Color primaryDark = Color(0xFF1565C0);
+  // Brand Colors (Deep Blue chuyên nghiệp như trong ảnh)
+  static const Color primaryBlue = Color(0xFF1A237E); 
+  static const Color accentBlue = Color(0xFF2196F3);
 
-  // Neutral colors
-  static const Color backgroundLight = Color(0xFFF5F5F5);
-  static const Color backgroundDark = Color(0xFF121212);
+  // Light Mode Palette
+  static const Color bgLight = Color(0xFFFFFFFF); // Trắng tinh khiết cho cảm giác minimalist
+  static const Color surfaceLight = Color(0xFFF8F9FA); // Màu cho các card bài báo
+  static const Color textPrimaryLight = Color(0xFF121212);
+  static const Color textSecondaryLight = Color(0xFF616161);
 
-  // Text colors
-  static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textOnDark = Color(0xFFFFFFFF);
+  // Dark Mode Palette (Sử dụng Deep Grey/Navy thay vì đen thuần)
+  static const Color bgDark = Color(0xFF121212); 
+  static const Color surfaceDark = Color(0xFF1E1E1E);
+  static const Color textPrimaryDark = Color(0xFFECEFF1);
+  static const Color textSecondaryDark = Color(0xFFB0BEC5);
 
-  // Status colors
-  static const Color error = Color(0xFFD32F2F);
-  static const Color success = Color(0xFF388E3C);
+  // Pastel Colors cho Category Chips (như trong giao diện bạn yêu cầu)
+  static const Color chipTech = Color(0xFFE3F2FD);
+  static const Color chipBusiness = Color(0xFFF3E5F5);
 }

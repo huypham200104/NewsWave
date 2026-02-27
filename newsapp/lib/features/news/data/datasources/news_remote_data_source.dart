@@ -26,12 +26,16 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return NewsResponseModel.fromJson(response.data);
+        print('Parsing response...');
+        final result = NewsResponseModel.fromJson(response.data);
+        print('Parsed ${result.articles.length} articles');
+        return result;
       } else {
         throw ServerException();
       }
     } catch (e) {
-      throw ServerException();
+      print('Remote DataSource Error: $e');
+      rethrow;
     }
   }
 }

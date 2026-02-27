@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import '../models/article_model.dart';
@@ -43,7 +44,7 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
         final mapData = Map<String, dynamic>.from(value as Map);
         articles.add(ArticleModel.fromJson(mapData));
       } catch (e) {
-        print("Cache Error: $e"); // Log để debug
+        debugPrint("Cache Error: $e"); // Log để debug
         continue;
       }
     }

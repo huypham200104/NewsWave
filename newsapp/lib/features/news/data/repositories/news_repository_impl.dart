@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../../core/error/failure.dart';
@@ -7,6 +8,7 @@ import '../../domain/repositories/news_repository.dart';
 import '../datasources/news_remote_data_source.dart';
 import '../datasources/news_local_datasource.dart';
 
+@LazySingleton(as: NewsRepository)
 class NewsRepositoryImpl implements NewsRepository {
   final NewsRemoteDataSource remoteDataSource;
   final NewsLocalDataSource localDataSource;
@@ -28,7 +30,8 @@ class NewsRepositoryImpl implements NewsRepository {
         await localDataSource.cacheArticles(remoteNews.articles);
         return Right(remoteNews.articles.map((model) => model.toEntity()).toList());
       } catch (e) {
-        return const Left(ServerFailure('API Error'));
+        print('Repository Error: $e');
+        return Left(ServerFailure('API Error: $e'));
       }
     } else {
       try {
