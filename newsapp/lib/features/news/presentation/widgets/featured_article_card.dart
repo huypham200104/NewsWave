@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/article_entity.dart';
+import '../bloc/bookmark/bookmark_bloc.dart';
+import '../bloc/bookmark/bookmark_event.dart';
+import '../bloc/bookmark/bookmark_state.dart';
+import '../pages/article_details_page.dart';
 
 class FeaturedArticleCard extends StatelessWidget {
   final ArticleEntity article;
@@ -25,19 +31,31 @@ class FeaturedArticleCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleDetailsPage(article: article),
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: AspectRatio(
               aspectRatio: 16 / 9,
-              child: article.urlToImage != null
-                  ? Image.network(
-                      article.urlToImage!,
+              child: article.urlToImage != null && article.urlToImage!.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: article.urlToImage!,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
+                      errorWidget: (context, url, error) =>
                           Container(color: Colors.grey[300]),
                     )
                   : Container(color: Colors.grey[300]),
@@ -99,10 +117,25 @@ class FeaturedArticleCard extends StatelessWidget {
                     ),
 
                     const Spacer(),
-                    Icon(
-                      Icons.bookmark_border,
-                      size: 20,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                    BlocBuilder<BookmarkBloc, BookmarkState>(
+                      builder: (context, state) {
+                        bool isBookmarked = false;
+                        if (state is BookmarkLoaded) {
+                          isBookmarked = state.bookmarks.any((b) => b.url == article.url);
+                        }
+                        return InkWell(
+                          onTap: () {
+                            context.read<BookmarkBloc>().add(ToggleBookmarkEvent(article));
+                          },
+                          child: Icon(
+                            isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                            size: 20,
+                            color: isBookmarked 
+                                ? AppColors.primaryBlue 
+                                : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -110,6 +143,8 @@ class FeaturedArticleCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+        ),
       ),
     );
   }

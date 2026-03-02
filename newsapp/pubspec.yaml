@@ -38,6 +38,7 @@ dependencies:
   freezed_annotation: ^2.4.1 # Annotations cho Freezed
   json_annotation: ^4.9.0   # Required cho json_serializable
   flutter_dotenv: ^5.2.1    # Load biến môi trường từ .env
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

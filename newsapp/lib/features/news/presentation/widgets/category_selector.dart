@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../bloc/news_bloc.dart';
 
 class CategorySelector extends StatefulWidget {
   const CategorySelector({super.key});
@@ -17,7 +19,7 @@ class _CategorySelectorState extends State<CategorySelector> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: 50,
+      height: 44, // Slightly smaller height for a sleeker look
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -25,26 +27,49 @@ class _CategorySelectorState extends State<CategorySelector> {
         itemBuilder: (context, index) {
           final isSelected = selectedIndex == index;
           return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: ChoiceChip(
-              label: Text(categories[index]),
-              selected: isSelected,
-              onSelected: (bool selected) {
+            padding: const EdgeInsets.only(right: 12.0),
+            child: GestureDetector(
+              onTap: () {
                 setState(() {
                   selectedIndex = index;
                 });
+                
+                final bloc = context.read<NewsBloc>();
+                if (index == 0) {
+                  bloc.add(GetTopHeadlinesEvent());
+                } else {
+                  bloc.add(GetNewsByCategoryEvent(categories[index].toLowerCase()));
+                }
               },
-              selectedColor: isDark ? AppColors.accentBlue : AppColors.primaryBlue,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected 
+                      ? (isDark ? AppColors.accentBlue : AppColors.primaryBlue) 
+                      : (isDark ? AppColors.surfaceDark : AppColors.surfaceLight),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: const [], // Shadow removed as requested
+                  border: Border.all(
+                    color: isSelected 
+                        ? Colors.transparent 
+                        : (isDark ? Colors.white12 : Colors.black12),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  categories[index],
+                  style: TextStyle(
+                    color: isSelected 
+                        ? Colors.white 
+                        : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
               ),
-              showCheckmark: false,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              side: BorderSide.none,
-              backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
             ),
           );
         },

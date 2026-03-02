@@ -5,8 +5,6 @@ import '../widgets/featured_section.dart';
 import '../widgets/home_greeting.dart';
 import '../widgets/home_header.dart';
 import '../widgets/main_news_section.dart';
-import '../widgets/news_bottom_navigation.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -32,7 +30,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const NewsBottomNavigation(),
     );
   }
 }
