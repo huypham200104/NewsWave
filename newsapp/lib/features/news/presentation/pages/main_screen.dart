@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'discover_page.dart';
 import 'bookmarks_page.dart';
-import '../widgets/news_bottom_navigation.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
+import '../widgets/common/news_bottom_navigation.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     DiscoverPage(),
     BookmarksPage(),
-    Center(child: Text('Profile Page')),
+    ProfilePage(),
   ];
 
   void _onTap(int index) {

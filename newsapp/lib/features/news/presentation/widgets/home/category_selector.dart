@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../bloc/news_bloc.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../bloc/news_bloc.dart';
 
 class CategorySelector extends StatefulWidget {
   const CategorySelector({super.key});
@@ -13,6 +14,22 @@ class CategorySelector extends StatefulWidget {
 class _CategorySelectorState extends State<CategorySelector> {
   final List<String> categories = ['For You', 'World', 'Tech', 'Business', 'Sports'];
   int selectedIndex = 0;
+  List<String> _userTopics = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserTopics();
+  }
+
+  Future<void> _loadUserTopics() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _userTopics = prefs.getStringList('user_topics') ?? [];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +53,7 @@ class _CategorySelectorState extends State<CategorySelector> {
                 
                 final bloc = context.read<NewsBloc>();
                 if (index == 0) {
-                  bloc.add(GetTopHeadlinesEvent());
+                  bloc.add(GetTopHeadlinesEvent(topics: _userTopics));
                 } else {
                   bloc.add(GetNewsByCategoryEvent(categories[index].toLowerCase()));
                 }

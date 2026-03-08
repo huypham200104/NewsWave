@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/article_entity.dart';
-import '../bloc/bookmark/bookmark_bloc.dart';
-import '../bloc/bookmark/bookmark_event.dart';
-import '../bloc/bookmark/bookmark_state.dart';
-import '../pages/article_details_page.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/entities/article_entity.dart';
+import '../../bloc/bookmark/bookmark_bloc.dart';
+import '../../bloc/bookmark/bookmark_event.dart';
+import '../../bloc/bookmark/bookmark_state.dart';
+import '../../pages/article_details_page.dart';
 
 class ArticleListTile extends StatelessWidget {
   final ArticleEntity article;

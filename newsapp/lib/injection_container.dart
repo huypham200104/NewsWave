@@ -1,21 +1,25 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'injection_container.config.dart'; // File này sẽ được sinh ra sau
+import 'injection_container.config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
 @InjectableInit(
-  initializerName: 'init', // Tên hàm khởi tạo mặc định
-  preferRelativeImports: true, // Sử dụng relative import cho file sinh ra
-  asExtension: true, // Dùng extension method
+  initializerName: 'init',
+  preferRelativeImports: true,
+  asExtension: true,
 )
 Future<void> configureDependencies() async {
-  // 1. Init Hive trước khi inject các module khác
+  // 1. Init Hive
   await Hive.initFlutter();
-  // Tại đây bạn có thể mở các Box nếu cần thiết ngay lúc khởi động
-  // await Hive.openBox('newsBox'); 
   
-  // 2. Khởi tạo dependency tree
+  // 2. Register SharedPreferences manually (external dependency)
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => sharedPreferences);
+  
+  // 3. Auto-generated dependency injection
+  // All @injectable/@lazySingleton annotated classes will be registered
   getIt.init();
 }

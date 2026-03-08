@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart'; // <--- THÊM DÒNG NÀY
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_bloc.dart';
 import 'features/news/presentation/pages/main_screen.dart';
+import 'features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'injection_container.dart';
 
@@ -11,6 +13,11 @@ import 'injection_container.dart';
 import 'features/news/presentation/bloc/news_bloc.dart'; 
 import 'features/news/presentation/bloc/bookmark/bookmark_bloc.dart';
 import 'features/news/presentation/bloc/bookmark/bookmark_event.dart';
+import 'features/settings/presentation/bloc/settings_bloc.dart';
+import 'features/settings/presentation/bloc/settings_event.dart';
+import 'features/settings/presentation/bloc/settings_state.dart';
+import 'features/profile/presentation/bloc/profile_bloc.dart';
+import 'features/profile/presentation/bloc/profile_event.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -19,11 +26,26 @@ void main() async {
   await dotenv.load(fileName: ".env");
   await Hive.initFlutter();
   await configureDependencies();
-  runApp(const NewsWaveApp());
+
+  final prefs = await SharedPreferences.getInstance();
+  final hasCompletedOnboarding = prefs.getBool('has_completed_onboarding') ?? false;
+  final userTopics = prefs.getStringList('user_topics') ?? [];
+
+  runApp(NewsWaveApp(
+    showOnboarding: !hasCompletedOnboarding,
+    userTopics: userTopics,
+  ));
 }
 
 class NewsWaveApp extends StatelessWidget {
-  const NewsWaveApp({super.key});
+  final bool showOnboarding;
+  final List<String> userTopics;
+
+  const NewsWaveApp({
+    super.key, 
+    required this.showOnboarding,
+    this.userTopics = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +55,30 @@ class NewsWaveApp extends StatelessWidget {
           create: (_) => getIt<ThemeBloc>(),
         ),
         BlocProvider<NewsBloc>(
-          create: (_) => getIt<NewsBloc>()..add(GetTopHeadlinesEvent()), 
+          create: (_) => getIt<NewsBloc>()..add(GetTopHeadlinesEvent(topics: userTopics)), 
         ),
         BlocProvider<BookmarkBloc>(
           create: (_) => getIt<BookmarkBloc>()..add(LoadBookmarksEvent()),
         ),
+        BlocProvider<SettingsBloc>(
+          create: (_) => getIt<SettingsBloc>()..add(LoadSettings()),
+        ),
+        BlocProvider<ProfileBloc>(
+          create: (_) => getIt<ProfileBloc>()..add(LoadProfile()),
+        ),
       ],
-      child: BlocBuilder<ThemeBloc, ThemeMode>(
-        builder: (context, themeMode) {
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, state) {
+          final isDarkMode = state is SettingsLoaded ? state.settings.isDarkMode : false;
+          final themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+          
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'News Wave',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeMode,
-            home: const MainScreen(),
+            home: showOnboarding ? const OnboardingPage() : const MainScreen(),
           );
         },
       ),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/bookmark/bookmark_bloc.dart';
 import '../bloc/bookmark/bookmark_event.dart';
 import '../bloc/bookmark/bookmark_state.dart';
-import '../widgets/article_list_tile.dart';
+import '../widgets/article/article_list_tile.dart';
 
 class BookmarksPage extends StatelessWidget {
   const BookmarksPage({super.key});

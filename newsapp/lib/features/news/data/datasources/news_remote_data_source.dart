@@ -5,57 +5,43 @@ import '../../../../core/error/exceptions.dart';
 import '../models/news_response_model.dart';
 import '../models/sources_response_model.dart';
 
+/// Remote data source for news API
+/// API key is automatically added by Dio interceptor - Following SRP
 abstract class NewsRemoteDataSource {
-  Future<NewsResponseModel> getTopHeadlines({required String apiKey});
-  Future<NewsResponseModel> getNewsByCategory({required String category, required String apiKey});
+  Future<NewsResponseModel> getTopHeadlines();
+  Future<NewsResponseModel> getNewsByCategory({required String category});
   Future<NewsResponseModel> searchNews({
     required String query,
     String? from,
     String? to,
     String? sortBy,
-    required String apiKey,
   });
-  Future<NewsResponseModel> getTrendingNews({required String apiKey});
-  Future<SourcesResponseModel> getSources({required String apiKey});
-  Future<NewsResponseModel> getNewsByCountry({required String country, required String apiKey});
+  Future<NewsResponseModel> getTrendingNews();
+  Future<SourcesResponseModel> getSources();
+  Future<NewsResponseModel> getNewsByCountry({required String country});
   Future<NewsResponseModel> getNewsByCategoryAndCountry({
     required String category,
     required String country,
-    required String apiKey,
   });
 }
 
-@LazySingleton(as: NewsRemoteDataSource) // QUAN TRỌNG: Để Injectable nhận diện
+@LazySingleton(as: NewsRemoteDataSource)
 class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   final Dio _dio;
 
-  // Dio sẽ được tự động inject nhờ module ta sẽ tạo sau
   NewsRemoteDataSourceImpl(this._dio);
 
   @override
-  Future<NewsResponseModel> getTopHeadlines({required String apiKey}) async {
-    return _getNewsFromUrl(
-      'top-headlines',
-      {
-        'country': 'us',
-        'apiKey': apiKey,
-      },
-    );
+  Future<NewsResponseModel> getTopHeadlines() async {
+    return _getNewsFromUrl('top-headlines', {'country': 'us'});
   }
 
   @override
-  Future<NewsResponseModel> getNewsByCategory({
-    required String category,
-    required String apiKey,
-  }) async {
-    return _getNewsFromUrl(
-      'top-headlines',
-      {
-        'country': 'us',
-        'category': category,
-        'apiKey': apiKey,
-      },
-    );
+  Future<NewsResponseModel> getNewsByCategory({required String category}) async {
+    return _getNewsFromUrl('top-headlines', {
+      'country': 'us',
+      'category': category,
+    });
   }
 
   @override
@@ -64,12 +50,8 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
     String? from,
     String? to,
     String? sortBy,
-    required String apiKey,
   }) async {
-    final Map<String, dynamic> params = {
-      'q': query,
-      'apiKey': apiKey,
-    };
+    final Map<String, dynamic> params = {'q': query};
     if (from != null) params['from'] = from;
     if (to != null) params['to'] = to;
     if (sortBy != null) params['sortBy'] = sortBy;
@@ -78,26 +60,17 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   }
 
   @override
-  Future<NewsResponseModel> getTrendingNews({required String apiKey}) async {
-    return _getNewsFromUrl(
-      'everything',
-      {
-        'q': 'news', // Endpoint /everything requires a query, or we use domains
-        'sortBy': 'popularity',
-        'apiKey': apiKey,
-      },
-    );
+  Future<NewsResponseModel> getTrendingNews() async {
+    return _getNewsFromUrl('everything', {
+      'q': 'news',
+      'sortBy': 'popularity',
+    });
   }
 
   @override
-  Future<SourcesResponseModel> getSources({required String apiKey}) async {
+  Future<SourcesResponseModel> getSources() async {
     try {
-      final response = await _dio.get(
-        'top-headlines/sources',
-        queryParameters: {
-          'apiKey': apiKey,
-        },
-      );
+      final response = await _dio.get('top-headlines/sources');
 
       if (response.statusCode == 200) {
         return SourcesResponseModel.fromJson(response.data);
@@ -111,33 +84,19 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   }
 
   @override
-  Future<NewsResponseModel> getNewsByCountry({
-    required String country,
-    required String apiKey,
-  }) async {
-    return _getNewsFromUrl(
-      'top-headlines',
-      {
-        'country': country,
-        'apiKey': apiKey,
-      },
-    );
+  Future<NewsResponseModel> getNewsByCountry({required String country}) async {
+    return _getNewsFromUrl('top-headlines', {'country': country});
   }
 
   @override
   Future<NewsResponseModel> getNewsByCategoryAndCountry({
     required String category,
     required String country,
-    required String apiKey,
   }) async {
-    return _getNewsFromUrl(
-      'top-headlines',
-      {
-        'country': country,
-        'category': category,
-        'apiKey': apiKey,
-      },
-    );
+    return _getNewsFromUrl('top-headlines', {
+      'country': country,
+      'category': category,
+    });
   }
 
   Future<NewsResponseModel> _getNewsFromUrl(

@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failure.dart';
-import '../repositories/news_repository.dart';
+import '../repositories/search_history_repository.dart';
 import 'usecase.dart';
 
 @lazySingleton
 class SaveSearchHistoryUseCase implements UseCase<void, String> {
-  final NewsRepository repository;
+  final SearchHistoryRepository repository;
 
   SaveSearchHistoryUseCase(this.repository);
 

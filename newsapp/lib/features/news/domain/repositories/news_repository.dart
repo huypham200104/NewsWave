@@ -3,6 +3,8 @@ import '../../../../core/error/failure.dart';
 import '../entities/article_entity.dart';
 import '../entities/news_source_entity.dart';
 
+/// Repository for news-related operations only
+/// Following Single Responsibility Principle
 abstract class NewsRepository {
   Future<Either<Failure, List<ArticleEntity>>> getTopHeadlines();
   Future<Either<Failure, List<ArticleEntity>>> getNewsByCategory(String category);
@@ -19,15 +21,4 @@ abstract class NewsRepository {
     required String category,
     required String country,
   });
-
-  // Search History
-  Future<Either<Failure, List<String>>> getSearchHistory();
-  Future<Either<Failure, void>> saveSearchHistory(String query);
-  Future<Either<Failure, void>> clearSearchHistory();
-
-  // Bookmarks
-  Future<Either<Failure, void>> saveBookmark(ArticleEntity article);
-  Future<Either<Failure, void>> removeBookmark(String url);
-  Future<Either<Failure, List<ArticleEntity>>> getBookmarks();
-  Future<Either<Failure, bool>> checkBookmark(String url);
 }

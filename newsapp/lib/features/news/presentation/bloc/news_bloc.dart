@@ -14,7 +14,13 @@ abstract class NewsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetTopHeadlinesEvent extends NewsEvent {}
+class GetTopHeadlinesEvent extends NewsEvent {
+  final List<String> topics;
+  GetTopHeadlinesEvent({this.topics = const []});
+
+  @override
+  List<Object> get props => [topics];
+}
 
 class GetNewsByCategoryEvent extends NewsEvent {
   final String category;
@@ -72,13 +78,23 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   ) : super(NewsInitial()) {
     on<GetTopHeadlinesEvent>((event, emit) async {
       emit(NewsLoading());
-      // Gọi UseCase
-      final result = await getArticlesUseCase(NoParams());
-
-      result.fold(
-            (failure) => emit(NewsError(failure.message)),
-            (articles) => emit(NewsLoaded(articles)),
-      );
+      
+      if (event.topics.isNotEmpty) {
+        // Build a combined OR query
+        final query = event.topics.join(' OR ');
+        final result = await searchNewsUseCase(SearchParams(query: query));
+        result.fold(
+          (failure) => emit(NewsError(failure.message)),
+          (articles) => emit(NewsLoaded(articles)),
+        );
+      } else {
+        // Fallback to general top headlines
+        final result = await getArticlesUseCase(NoParams());
+        result.fold(
+          (failure) => emit(NewsError(failure.message)),
+          (articles) => emit(NewsLoaded(articles)),
+        );
+      }
     });
 
     on<GetNewsByCategoryEvent>((event, emit) async {

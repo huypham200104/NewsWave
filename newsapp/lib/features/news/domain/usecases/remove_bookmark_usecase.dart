@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failure.dart';
-import '../repositories/news_repository.dart';
+import '../repositories/bookmark_repository.dart';
 import 'usecase.dart';
 
 @injectable
 class RemoveBookmarkUseCase implements UseCase<void, String> {
-  final NewsRepository repository;
+  final BookmarkRepository repository;
 
   RemoveBookmarkUseCase(this.repository);
 

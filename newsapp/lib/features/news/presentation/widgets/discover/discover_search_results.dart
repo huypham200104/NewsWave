@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/article_entity.dart';
-import '../article_list_tile.dart';
+import '../article/article_list_tile.dart';
 
 class DiscoverSearchResults extends StatelessWidget {
   final List<ArticleEntity> results;
@@ -10,12 +10,29 @@ class DiscoverSearchResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (results.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: Text(
-            'No results found.',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search_off, size: 64, color: Colors.grey.withAlpha(150)),
+              const SizedBox(height: 16),
+              const Text(
+                'No results found.',
+                style: TextStyle(
+                  fontSize: 18, 
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'We couldn\'t find any news for this category or search query.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+            ],
           ),
         ),
       );

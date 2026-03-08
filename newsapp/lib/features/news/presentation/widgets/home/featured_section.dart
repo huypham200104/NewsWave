@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../bloc/news_bloc.dart';
-import 'featured_article_card.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../bloc/news_bloc.dart';
+import '../article/featured_article_card.dart';
 
 class FeaturedSection extends StatelessWidget {
   const FeaturedSection({super.key});
@@ -33,6 +33,17 @@ class FeaturedSection extends StatelessWidget {
                 child: Center(child: CircularProgressIndicator()),
               );
             } else if (state is NewsLoaded) {
+              if (state.articles.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: Text(
+                      'No articles found for this category.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ),
+                );
+              }
               final featuredArticles = state.articles.take(5).toList();
               return SizedBox(
                 height: 320,

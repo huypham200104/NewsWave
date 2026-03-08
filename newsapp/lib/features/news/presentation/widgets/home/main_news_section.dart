@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../bloc/news_bloc.dart';
-import 'article_list_tile.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../bloc/news_bloc.dart';
+import '../article/article_list_tile.dart';
 
 class MainNewsSection extends StatelessWidget {
   const MainNewsSection({super.key});
@@ -28,7 +28,11 @@ class MainNewsSection extends StatelessWidget {
         BlocBuilder<NewsBloc, NewsState>(
           builder: (context, state) {
             if (state is NewsLoaded) {
+              if (state.articles.isEmpty) return const SizedBox.shrink();
+              
               final mainArticles = state.articles.skip(5).toList();
+              if (mainArticles.isEmpty) return const SizedBox.shrink(); // Hide 'Main' section if no extra articles
+
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

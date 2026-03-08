@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/theme_bloc.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../settings/presentation/bloc/settings_bloc.dart';
+import '../../../../settings/presentation/bloc/settings_event.dart';
+import '../../../../settings/presentation/bloc/settings_state.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -26,19 +28,20 @@ class HomeHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              BlocBuilder<ThemeBloc, ThemeMode>(
-                builder: (context, mode) {
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  final isDarkMode = state is SettingsLoaded ? state.settings.isDarkMode : false;
                   return IconButton(
                     icon: Icon(
-                      mode == ThemeMode.light
+                      !isDarkMode
                           ? Icons.wb_sunny_outlined
                           : Icons.nightlight_round_outlined,
-                      color: mode == ThemeMode.light
+                      color: !isDarkMode
                           ? Colors.orange
                           : AppColors.accentBlue,
                     ),
                     onPressed: () {
-                      context.read<ThemeBloc>().add(ThemeEvent.toggle);
+                      context.read<SettingsBloc>().add(ThemeChanged(!isDarkMode));
                     },
                   );
                 },
