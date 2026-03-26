@@ -46,6 +46,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0     # Bộ quy tắc viết code sạch
+  bloc_test: ^10.0.0        # Test BLoC emit sequence (compatible with flutter_bloc ^9)
+  mocktail: ^1.0.4          # Mock dependencies
 
   # --- Code Generation (Thợ xây của dự án) ---
   build_runner: ^2.4.9
