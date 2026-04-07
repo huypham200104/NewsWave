@@ -16,7 +16,6 @@
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1c-QTNCVXKuetGIS5CHfJLIfbGogLBWF3/view?usp=drive_link">
-    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video Demo Dự Án" width="600"/>
     <br/>
     <strong>▶️ Nhấn vào ảnh để xem Video Demo Dự Án trên Google Drive</strong>
   </a>
