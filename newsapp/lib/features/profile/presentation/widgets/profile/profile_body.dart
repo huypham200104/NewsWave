@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../onboarding/presentation/pages/onboarding_page.dart';
+import '../../../../onboarding/presentation/pages/onboarding_page.dart';        
 import 'profile_avatar_section.dart';
 import 'profile_info_section.dart';
 import 'profile_interests_section.dart';
 import 'profile_menu_section.dart';
 import '../../models/profile_menu_item.dart';
 import '../../pages/edit_profile_page.dart';
-import '../../../../settings/presentation/bloc/settings_bloc.dart';
-import '../../../../settings/presentation/bloc/settings_event.dart';
 import '../../../../settings/presentation/widgets/language_bottom_sheet.dart';
 import '../../../../settings/presentation/widgets/appearance_bottom_sheet.dart';
+import '../../../../../core/localization/app_localizations.dart';
 
 class ProfileBody extends StatelessWidget {
   final String userName;
@@ -84,27 +82,19 @@ class ProfileBody extends StatelessWidget {
 
             // Settings Menu
             ProfileMenuSection(
-              title: 'Settings',
+              title: context.tr('settings'),
               isDark: isDark,
               animationDelay: 500,
               items: [
                 ProfileMenuItem(
-                  icon: notificationsEnabled ? Icons.notifications_active_outlined : Icons.notifications_off_outlined,
-                  title: 'Notifications',
-                  trailing: notificationsEnabled ? 'On' : 'Off',
-                  onTap: () {
-                    context.read<SettingsBloc>().add(NotificationsToggled(!notificationsEnabled));
-                  },
-                ),
-                ProfileMenuItem(
                   icon: Icons.language_outlined,
-                  title: 'Language',
+                  title: context.tr('language'),
                   trailing: languageText,
                   onTap: () => _showLanguageSheet(context),
                 ),
                 ProfileMenuItem(
                   icon: Icons.dark_mode_outlined,
-                  title: 'Appearance',
+                  title: context.tr('appearance'),
                   trailing: appearanceText,
                   onTap: () => _showAppearanceSheet(context),
                 ),
@@ -115,13 +105,13 @@ class ProfileBody extends StatelessWidget {
 
             // Account Menu
             ProfileMenuSection(
-              title: 'Account',
+              title: context.tr('account'),
               isDark: isDark,
               animationDelay: 600,
               items: [
                 ProfileMenuItem(
                   icon: Icons.person_outline,
-                  title: 'Edit Profile',
+                  title: context.tr('edit_profile'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -131,7 +121,7 @@ class ProfileBody extends StatelessWidget {
                 ),
                 ProfileMenuItem(
                   icon: Icons.settings_backup_restore,
-                  title: 'Reset Onboarding Flow',
+                  title: context.tr('reset_onboarding_flow'),
                   onTap: () => _resetOnboarding(context),
                 ),
               ],

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
+import '../../../../core/localization/app_localizations.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
   const LanguageBottomSheet({super.key});
@@ -25,9 +26,9 @@ class LanguageBottomSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Select Language',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                context.tr('select_language'),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               _LanguageOption(

@@ -12,7 +12,13 @@ class CategorySelector extends StatefulWidget {
 }
 
 class _CategorySelectorState extends State<CategorySelector> {
-  final List<String> categories = ['For You', 'World', 'Tech', 'Business', 'Sports'];
+  // All topics available in the app (matching onboarding)
+  static const List<String> _allTopics = [
+    'Technology', 'Business', 'Sports', 'Entertainment',
+    'Health', 'Science', 'Politics', 'Gaming', 'Travel', 'Food'
+  ];
+
+  List<String> categories = ['For You', ..._allTopics];
   int selectedIndex = 0;
   List<String> _userTopics = [];
 
@@ -27,6 +33,22 @@ class _CategorySelectorState extends State<CategorySelector> {
     if (mounted) {
       setState(() {
         _userTopics = prefs.getStringList('user_topics') ?? [];
+        
+        categories = ['For You'];
+        
+        // 1. Add selected user topics first
+        for (var topic in _userTopics) {
+          if (!categories.contains(topic)) {
+            categories.add(topic);
+          }
+        }
+        
+        // 2. Add remaining topics
+        for (var topic in _allTopics) {
+          if (!categories.contains(topic)) {
+            categories.add(topic);
+          }
+        }
       });
     }
   }

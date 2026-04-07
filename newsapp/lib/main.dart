@@ -6,6 +6,8 @@ import 'core/theme/theme_bloc.dart';
 import 'features/news/presentation/pages/main_screen.dart';
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; // <--- THÊM DÒNG NÀY
+import 'core/localization/app_localizations.dart'; // <--- THÊM DÒNG NÀY
 
 import 'injection_container.dart';
 
@@ -70,14 +72,26 @@ class NewsWaveApp extends StatelessWidget {
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           final isDarkMode = state is SettingsLoaded ? state.settings.isDarkMode : false;
+          final languageCode = state is SettingsLoaded ? state.settings.languageCode : 'en';
           final themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
-          
+
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'News Wave',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeMode,
+            locale: Locale(languageCode),
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('vi', ''),
+            ],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             home: showOnboarding ? const OnboardingPage() : const MainScreen(),
           );
         },
