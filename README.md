@@ -5,11 +5,13 @@
   <img src="https://img.shields.io/badge/Dart-3.3+-0175C2?style=for-the-badge&logo=dart&logoColor=white"/>
   <img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-green?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/State-BLoC-blueviolet?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Tests-14%20files-brightgreen?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Version-1.0.0-orange?style=for-the-badge"/>
 </p>
 
 <p align="center">
-  Ứng dụng đọc tin tức chuyên nghiệp được xây dựng bằng Flutter, áp dụng Clean Architecture và BLoC pattern.
+  Ứng dụng đọc tin tức chuyên nghiệp được xây dựng bằng Flutter, áp dụng Clean Architecture và BLoC pattern.<br/>
+  Tích hợp bộ kiểm thử toàn diện bao gồm unit test, BLoC test và widget test.
 </p>
 
 <p align="center">
@@ -89,7 +91,7 @@ newsapp/lib/
 | Package | Phiên bản | Mục đích |
 |---------|-----------|----------|
 | `hive` + `hive_flutter` | ^2.2.3 | Local database nhẹ, nhanh |
-| `shared_preferences` | - | Lưu cài đặt đơn giản |
+| `shared_preferences` | ^2.5.3 | Lưu cài đặt đơn giản |
 | `path_provider` | ^2.1.3 | Quản lý đường dẫn file |
 
 ### UI & Utilities
@@ -98,9 +100,16 @@ newsapp/lib/
 | `cached_network_image` | ^3.4.1 | Cache ảnh từ network |
 | `shimmer` | ^3.0.0 | Hiệu ứng loading skeleton |
 | `flutter_svg` | ^2.0.10 | Hỗ trợ ảnh SVG |
-| `flutter_animate` | - | Hiệu ứng animation |
+| `flutter_animate` | ^4.5.2 | Hiệu ứng animation |
 | `url_launcher` | ^6.3.2 | Mở link bài viết |
 | `intl` | ^0.19.0 | Format ngày tháng |
+
+### Testing
+| Package | Phiên bản | Mục đích |
+|---------|-----------|----------|
+| `flutter_test` | SDK | Widget & unit testing |
+| `bloc_test` | ^10.0.0 | Kiểm thử BLoC |
+| `mocktail` | ^1.0.4 | Mock dependencies |
 
 ---
 
@@ -142,6 +151,78 @@ flutter run
 
 ---
 
+## 🧪 Kiểm thử (Testing)
+
+Dự án có bộ kiểm thử toàn diện gồm **14 file test** (~2.200 dòng), bao phủ cả 3 tầng của Clean Architecture.
+
+### Cấu trúc thư mục test
+
+```
+newsapp/test/
+├── core/
+│   └── error/
+│       └── failure_test.dart               # Kiểm thử các lớp Failure
+│
+└── features/news/
+    ├── data/
+    │   ├── models/
+    │   │   ├── article_model_test.dart          # Kiểm thử ArticleModel (JSON)
+    │   │   └── news_response_model_test.dart    # Kiểm thử NewsResponseModel (JSON)
+    │   └── repositories/
+    │       ├── news_repository_impl_test.dart        # Kiểm thử NewsRepositoryImpl
+    │       └── bookmark_repository_impl_test.dart    # Kiểm thử BookmarkRepositoryImpl
+    │
+    ├── domain/usecases/
+    │   ├── get_articles_usecase_test.dart      # Kiểm thử GetArticlesUseCase
+    │   ├── search_news_usecase_test.dart       # Kiểm thử SearchNewsUseCase
+    │   └── bookmark_usecases_test.dart         # Kiểm thử các UseCase bookmark
+    │
+    └── presentation/
+        ├── bloc/
+        │   ├── news_bloc_test.dart             # Kiểm thử NewsBloc
+        │   ├── discover_bloc_test.dart         # Kiểm thử DiscoverBloc
+        │   └── bookmark_bloc_test.dart         # Kiểm thử BookmarkBloc
+        └── widgets/
+            ├── article_list_tile_test.dart    # Kiểm thử widget ArticleListTile
+            ├── discover_search_bar_test.dart  # Kiểm thử widget DiscoverSearchBar
+            └── category_selector_test.dart    # Kiểm thử widget CategorySelector
+```
+
+### Phạm vi kiểm thử
+
+| Tầng | File test | Nội dung kiểm thử |
+|------|-----------|-------------------|
+| **Core** | `failure_test.dart` | Các lớp Failure (ServerFailure, NetworkFailure, ...) |
+| **Data – Models** | `article_model_test.dart`, `news_response_model_test.dart` | Parse JSON, serialize, equality |
+| **Data – Repositories** | `news_repository_impl_test.dart`, `bookmark_repository_impl_test.dart` | Luồng thành công, xử lý lỗi, offline |
+| **Domain – Use Cases** | `get_articles_usecase_test.dart`, `search_news_usecase_test.dart`, `bookmark_usecases_test.dart` | Logic nghiệp vụ, truyền tham số |
+| **Presentation – BLoC** | `news_bloc_test.dart`, `discover_bloc_test.dart`, `bookmark_bloc_test.dart` | Chuyển đổi state, xử lý event |
+| **Presentation – Widgets** | `article_list_tile_test.dart`, `discover_search_bar_test.dart`, `category_selector_test.dart` | Render UI, tương tác người dùng |
+
+### Chạy kiểm thử
+
+```bash
+# Chạy toàn bộ test
+flutter test
+
+# Chạy với báo cáo coverage
+flutter test --coverage
+
+# Chạy một file test cụ thể
+flutter test test/features/news/domain/usecases/get_articles_usecase_test.dart
+
+# Chạy toàn bộ test trong một thư mục
+flutter test test/features/news/presentation/bloc/
+```
+
+### Công cụ kiểm thử sử dụng
+
+- **`flutter_test`** — Framework kiểm thử tích hợp sẵn của Flutter (unit, widget)
+- **`bloc_test`** — Kiểm thử BLoC với API `blocTest<>`, hỗ trợ kiểm tra chuỗi state
+- **`mocktail`** — Mock dependencies bằng cú pháp đơn giản, không cần code generation
+
+---
+
 ## 📱 Các màn hình
 
 - **Onboarding** — Giới thiệu app khi mở lần đầu, chọn chủ đề quan tâm
@@ -168,6 +249,13 @@ NewsWave/
     │       ├── onboarding/
     │       ├── settings/
     │       └── profile/
+    ├── test/
+    │   ├── core/
+    │   │   └── error/
+    │   └── features/news/
+    │       ├── data/
+    │       ├── domain/
+    │       └── presentation/
     ├── assets/
     │   ├── images/
     │   ├── icons/
